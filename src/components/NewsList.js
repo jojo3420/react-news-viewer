@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React from 'react';
 import styled from 'styled-components';
 import NewsItem from './NewsItem';
+import axios from 'axios';
+import useFetch from 'hooks/useFetch';
 
 const NewsListBlock = styled.div`
   box-sizing: border-box;
@@ -17,25 +18,17 @@ const NewsListBlock = styled.div`
 `;
 
 function NewsList({ category }) {
-  const [articles, setArticles] = useState(null);
-
-  useEffect(() => {
-    const request = async () => {
-      const url = `https://newsapi.org/v2/top-headlines?country=kr&apiKey=${
-        process.env.REACT_APP_NEWS_API_KEY
-      }&category=${category ? category : ''}`;
-      try {
-        const result = await axios.get(url);
-        console.log({ result });
-        setArticles(result.data.articles);
-      } catch (e) {
-        console.error(e);
-      }
-    };
-    request();
+  const [loading, response, error] = useFetch(() => {
+    const url = `https://newsapi.org/v2/top-headlines?country=kr&apiKey=${
+      process.env.REACT_APP_NEWS_API_KEY
+    }&category=${category ? category : ''}`;
+    return axios.get(url);
   }, [category]);
+  if (loading) return <NewsListBlock>loading...</NewsListBlock>;
+  if (error) return <NewsListBlock>{error}</NewsListBlock>;
+  if (!response) return null;
 
-  if (!articles) return null;
+  const { articles } = response.data;
   if (articles && articles.length === 0)
     return <NewsListBlock>data is empty.</NewsListBlock>;
 
