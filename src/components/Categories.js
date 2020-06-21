@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import { NavLink } from 'react-router-dom';
 
 const categories = [
   {
@@ -43,7 +44,7 @@ const CategoriesBlock = styled.div`
   }
 `;
 
-const Category = styled.div`
+const Category = styled(NavLink)`
   font-size: 1.125rem;
   cursor: pointer;
   white-space: pre;
@@ -54,15 +55,15 @@ const Category = styled.div`
   &:hover {
     color: #495057;
   }
-  ${(props) =>
-    props.active &&
-    css`
+  &.active {
     font-weight: 600;
     border-bottom: 2px solid green;
     color: blue;
     &: hover {
-    color: red;
-  `}
+      color: red;
+    }
+  }
+
   & + & {
     margin-left: 1rem;
   }
@@ -75,8 +76,9 @@ function Categories({ category, handleCategory }) {
         return (
           <Category
             key={index}
-            active={category === c.name}
-            onClick={() => handleCategory(c.name)}
+            activeClassName="active"
+            // exact={c.name === 'general'}
+            to={`/${c.name}`}
           >
             {c.label}
           </Category>
