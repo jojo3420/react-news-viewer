@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 // import axios from 'axios';
 import NewsList from 'components/NewsList';
+import Categories from 'components/Categories';
 
 function App() {
   // const [articles, setArticles] = useState(null);
@@ -19,6 +20,7 @@ function App() {
   return (
     <div>
       <h1>news viewer</h1>
+      <Categories />
       <NewsList />
     </div>
   );
