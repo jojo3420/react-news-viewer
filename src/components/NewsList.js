@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
 import NewsItem from './NewsItem';
 
@@ -22,25 +23,39 @@ const sampleArticle = {
   urlToImage: 'https://via.placeholder.com/160',
 };
 
-function NewsList() {
+NewsList.defaultProps = {
+  category: 'general',
+};
+
+function NewsList({ category }) {
+  const [articles, setArticles] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const url = `https://newsapi.org/v2/top-headlines?country=kr&apiKey=${process.env.REACT_APP_NEWS_API_KEY}&category=${category}`;
+      try {
+        const result = await axios.get(url);
+        console.log({ result });
+        setArticles(result.data.articles);
+      } catch (e) {
+        console.error(e);
+      }
+      setLoading(false);
+    };
+    fetch();
+  }, [category]);
+
+  if (loading) return <div>loading...</div>;
+  if (!articles) return null;
+
   return (
     <NewsListBlock>
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
+      {articles.map((article) => (
+        <NewsItem key={article.title} article={article} />
+      ))}
     </NewsListBlock>
   );
 }
 
-export default NewsList;
+export default React.memo(NewsList);

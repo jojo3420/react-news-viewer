@@ -1,9 +1,9 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const categories = [
   {
-    name: 'all',
+    name: 'general',
     label: '전체보기',
   },
   {
@@ -54,17 +54,33 @@ const Category = styled.div`
   &:hover {
     color: #495057;
   }
-
+  ${(props) =>
+    props.active &&
+    css`
+    font-weight: 600;
+    border-bottom: 2px solid green;
+    color: blue;
+    &: hover {
+    color: red;
+  `}
   & + & {
     margin-left: 1rem;
   }
 `;
 
-function Categories(props) {
+function Categories({ category, handleCategory }) {
   return (
     <CategoriesBlock>
-      {categories.map((category, index) => {
-        return <Category key={index}>{category.label}</Category>;
+      {categories.map((c, index) => {
+        return (
+          <Category
+            key={index}
+            active={category === c.name}
+            onClick={() => handleCategory(c.name)}
+          >
+            {c.label}
+          </Category>
+        );
       })}
     </CategoriesBlock>
   );

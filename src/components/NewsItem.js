@@ -56,4 +56,4 @@ function NewsItem({ article }) {
   );
 }
 
-export default NewsItem;
+export default React.memo(NewsItem);
