@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
 import NewsItem from './NewsItem';
 
@@ -15,30 +16,34 @@ const NewsListBlock = styled.div`
   }
 `;
 
-const sampleArticle = {
-  title: 'sample title',
-  description: 'sample desc',
-  url: 'https://google.com',
-  urlToImage: 'https://via.placeholder.com/160',
-};
+function NewsList({ category }) {
+  const [articles, setArticles] = useState(null);
 
-function NewsList() {
+  useEffect(() => {
+    const request = async () => {
+      const url = `https://newsapi.org/v2/top-headlines?country=kr&apiKey=${
+        process.env.REACT_APP_NEWS_API_KEY
+      }&category=${category ? category : ''}`;
+      try {
+        const result = await axios.get(url);
+        console.log({ result });
+        setArticles(result.data.articles);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    request();
+  }, [category]);
+
+  if (!articles) return null;
+  if (articles && articles.length === 0)
+    return <NewsListBlock>data is empty.</NewsListBlock>;
+
   return (
     <NewsListBlock>
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
-      <NewsItem article={sampleArticle} />
+      {articles.map((article) => (
+        <NewsItem key={article.title} article={article} />
+      ))}
     </NewsListBlock>
   );
 }

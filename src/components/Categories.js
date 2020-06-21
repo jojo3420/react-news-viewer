@@ -60,11 +60,15 @@ const Category = styled.div`
   }
 `;
 
-function Categories(props) {
+function Categories({ handleCategory }) {
   return (
     <CategoriesBlock>
       {categories.map((category, index) => {
-        return <Category key={index}>{category.label}</Category>;
+        return (
+          <Category key={index} onClick={() => handleCategory(category.name)}>
+            {category.label}
+          </Category>
+        );
       })}
     </CategoriesBlock>
   );
