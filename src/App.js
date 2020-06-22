@@ -1,19 +1,12 @@
 import React, { useState, useCallback } from 'react';
-import NewsList from 'components/NewsList';
-import Categories from 'components/Categories';
+import { Route, BrowserRouter } from 'react-router-dom';
+import MainPage from 'pages/MainPage';
 
 function App() {
-  const [category, setCategory] = useState('general');
-  const handleCategory = useCallback((category) => {
-    setCategory(category);
-  }, []);
-
   return (
-    <div>
-      <h1>news viewer</h1>
-      <Categories handleCategory={handleCategory} />
-      <NewsList category={category} />
-    </div>
+    <BrowserRouter>
+      <Route path="/:category?" component={MainPage} />
+    </BrowserRouter>
   );
 }
 

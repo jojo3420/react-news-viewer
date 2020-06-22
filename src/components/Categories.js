@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
+import { NavLink } from 'react-router-dom';
 
 const categories = [
   {
-    name: 'all',
+    name: 'general',
     label: '전체보기',
   },
   {
@@ -43,7 +44,7 @@ const CategoriesBlock = styled.div`
   }
 `;
 
-const Category = styled.div`
+const Category = styled(NavLink)`
   font-size: 1.125rem;
   cursor: pointer;
   white-space: pre;
@@ -54,18 +55,30 @@ const Category = styled.div`
   &:hover {
     color: #495057;
   }
+  &.active {
+    font-weight: 600;
+    border-bottom: 2px solid green;
+    color: lightgray;
+    &:hover {
+      color: red;
+    }
+  }
 
   & + & {
     margin-left: 1rem;
   }
 `;
 
-function Categories({ handleCategory }) {
+function Categories({}) {
   return (
     <CategoriesBlock>
       {categories.map((category, index) => {
         return (
-          <Category key={index} onClick={() => handleCategory(category.name)}>
+          <Category
+            key={category.name}
+            to={`/${category.name}`}
+            activeClassName="active"
+          >
             {category.label}
           </Category>
         );
